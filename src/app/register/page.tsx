@@ -17,19 +17,16 @@ const Register = () => {
     // Log or use the formDataObject containing input values
     console.log("formDataObject", formDataObject);
     try {
-      const data = await fetch(
-        "https://aa98-43-241-144-225.ngrok-free.app/signup",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: formDataObject.email,
-            password: formDataObject.password,
-          }),
-        }
-      )
+      await fetch("https://aa98-43-241-144-225.ngrok-free.app/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formDataObject.email,
+          password: formDataObject.password,
+        }),
+      })
         .then(async (response: any) => {
           if (!response.ok) {
             const errorData = await response.json();

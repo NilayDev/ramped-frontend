@@ -1,39 +1,38 @@
 "use client";
-import React from "react";
+import { IJobList } from "@/interfaces/jobList.interface";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const Dashboard = () => {
-  const dataList = [
-    {
-      jobName: "Professional Counter",
-      companyName: "Life instance",
-      companyIndustry: "Health",
-      jobHours: "Full-Time",
-    },
-    {
-      jobName: "Professional Counter",
-      companyName: "Life instance",
-      companyIndustry: "Health",
-      jobHours: "Full-Time",
-    },
-    {
-      jobName: "Professional Counter",
-      companyName: "Life instance",
-      companyIndustry: "Health",
-      jobHours: "Full-Time",
-    },
-    {
-      jobName: "Professional Counter",
-      companyName: "Life instance",
-      companyIndustry: "Health",
-      jobHours: "Full-Time",
-    },
-    {
-      jobName: "Professional Counter",
-      companyName: "Life instance",
-      companyIndustry: "Health",
-      jobHours: "Full-Time",
-    },
-  ];
+  const [dataList, setDataList] = useState([]);
+  useEffect(() => {
+    getJobList();
+  }, []);
+
+  const getJobList = async (query?: string) => {
+    await fetch("https://aa98-43-241-144-225.ngrok-free.app/job_match", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query,
+      }),
+    })
+      .then(async (response: any) => {
+        const responseData = await response.json();
+        if (!response.ok) {
+          throw new Error(responseData.detail || "Something went wrong!");
+        }
+        return responseData;
+      })
+      .then((data) => {
+        setDataList(data);
+      })
+      .catch((err) => {
+        toast.error(err.message);
+      });
+  };
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.target as HTMLFormElement);
@@ -43,8 +42,7 @@ const Dashboard = () => {
       formDataObject[key] = value;
     });
 
-    // Log or use the formDataObject containing input values
-    console.log("formDataObject", formDataObject);
+    getJobList(formDataObject.search);
   };
   return (
     <section className="bg-gray-50 dark:bg-gray-900">
@@ -106,25 +104,25 @@ const Dashboard = () => {
                   Company name
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  Company Industry
+                  Country
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  Job Hours
+                  Region
                 </th>
               </tr>
             </thead>
             <tbody>
-              {dataList?.map((item) => (
+              {dataList?.map((item: IJobList) => (
                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                   <th
                     scope="row"
                     className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                   >
-                    {item.jobName}
+                    {item.job_name}
                   </th>
-                  <td className="px-6 py-4"> {item.companyName}</td>
-                  <td className="px-6 py-4"> {item.companyIndustry}</td>
-                  <td className="px-6 py-4">$ {item.jobName}</td>
+                  <td className="px-6 py-4"> {item.company_name}</td>
+                  <td className="px-6 py-4"> {item.country}</td>
+                  <td className="px-6 py-4">$ {item.region}</td>
                 </tr>
               ))}
             </tbody>
