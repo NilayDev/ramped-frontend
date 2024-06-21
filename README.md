@@ -1,5 +1,9 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## create .env.local
+
+copy .env.example in .env.local
+
 ## Install all the packages
 
 npm install
@@ -17,6 +21,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 ## Folder Structure
+
 ```
 .
 └── src

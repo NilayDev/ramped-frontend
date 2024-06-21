@@ -14,39 +14,32 @@ const LoginForm = () => {
       formDataObject[key] = value;
     });
 
-    // Log or use the formDataObject containing input values
-    console.log("formDataObject", formDataObject);
     try {
-      await fetch("https://aa98-43-241-144-225.ngrok-free.app/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: formDataObject.email,
-          password: formDataObject.password,
-        }),
-      })
-        .then(async (response) => {
-          if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.detail || "Something went wrong!");
-          }
-          return response.json();
-        })
-        .then((data) => {
-          console.log("data:", data);
-          toast.success(data.message);
-          document.cookie = `token=${data.access_token}`;
-          router.push("/dashboard");
-        })
-        .catch((error) => {
-          toast.error(error.message);
-        });
-      // Handle successful authentication
-    } catch (error) {
-      // Handle error
-      console.error("Authentication error:", error);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_APP_DEV_API_URL}/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: formDataObject.email,
+            password: formDataObject.password,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || "Something went wrong!");
+      }
+
+      const data = await response.json();
+      toast.success(data.message);
+      document.cookie = `token=${data.access_token}`;
+      router.push("/dashboard");
+    } catch (error: any) {
+      toast.error(error.message);
     }
   };
   return (

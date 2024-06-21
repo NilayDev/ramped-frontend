@@ -14,32 +14,29 @@ const RegisterForm = () => {
       formDataObject[key] = value;
     });
 
-    // Log or use the formDataObject containing input values
-    console.log("formDataObject", formDataObject);
     try {
-      await fetch("https://aa98-43-241-144-225.ngrok-free.app/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: formDataObject.email,
-          password: formDataObject.password,
-        }),
-      })
-        .then(async (response: any) => {
-          if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.detail || "Something went wrong!");
-          }
-          router.push("/login");
-        })
-        .catch((err) => {
-          toast.error(err.message);
-        });
-    } catch (error) {
-      // Handle error
-      console.error("Authentication error:", error);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_APP_DEV_API_URL}/signup`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: formDataObject.email,
+            password: formDataObject.password,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || "Something went wrong!");
+      }
+
+      router.push("/login");
+    } catch (error: any) {
+      toast.error(error.message);
     }
   };
   return (

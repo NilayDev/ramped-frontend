@@ -10,7 +10,7 @@ const Dashboard = () => {
   }, []);
 
   const getJobList = async (query?: string) => {
-    await fetch("https://aa98-43-241-144-225.ngrok-free.app/job_match", {
+    await fetch(`${process.env.NEXT_PUBLIC_APP_DEV_API_URL}/job_match`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
